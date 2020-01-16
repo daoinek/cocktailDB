@@ -13,17 +13,17 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var applyFiltersButton: UIButton!
-    
+
     private var selectedIndex: Int?
+    var allCocktails: [String: [[String: String]]]?
     let cocktailsViewController = CocktailsViewController()
+    let cocktailsDataSource = CocktailsDataSource()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.tableFooterView = UIView()
-        applyFiltersButton.layer.borderWidth = 1
-        applyFiltersButton.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-        applyFiltersButton.layer.cornerRadius = 15
-        applyFiltersButton.layer.masksToBounds = true
+                
+        loadDesign()
+        
         self.navigationItem.hidesBackButton = true
         let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItem.Style.plain, target: self, action: #selector(FilterViewController.back(sender:)))
         self.navigationItem.leftBarButtonItem = newBackButton
@@ -35,16 +35,7 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     
     
     
-    func selectCategory(forIndex index: Int) {
-        selectedCategoryIndex = index
-        let allCategory = Array(allCoctails.keys)
-        let category = allCategory[index]
-        let array = allCoctails[category]
-        if array != nil {
-            isFiltered = true
-            selectedCategoryArray = [category: array!]            
-        }
-    }
+    
     
     override func viewWillAppear(_ animated: Bool) {
         tableView.reloadData()
@@ -52,13 +43,13 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     
     
     @objc func back(sender: UIBarButtonItem) {
-        cocktailsViewController.backFromFilterWithoutChanges()
+        cocktailsDataSource.backFromFilterWithoutChanges(status: true)
         _ = navigationController?.popViewController(animated: true)
     }
     
     @IBAction func applyFilters(_ sender: UIButton) {
         guard let selectedIndex = selectedIndex else { return }
-        selectCategory(forIndex: selectedIndex)
+        cocktailsDataSource.selectCategory(forIndex: selectedIndex, allCoctails: allCocktails!)
             navigationController?.popViewController(animated: true)
     }
     
@@ -74,8 +65,8 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         
-        let valueArray = Array(allCoctails.keys)
-        
+        let valueArray = Array(allCocktails!.keys)
+        print(valueArray)
         return valueArray.count
     }
 
@@ -83,7 +74,7 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
        let cell = tableView.dequeueReusableCell(withIdentifier: "categoryInFilter", for: indexPath)
         
-        let valueArray = Array(allCoctails.keys)
+        let valueArray = Array(allCocktails!.keys)
         cell.textLabel?.text = valueArray[indexPath.row]
         
         return cell
@@ -98,11 +89,21 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         selectedIndex = indexPath.row
         
-        if selectedIndex == selectedCategoryIndex {
+        if selectedIndex == cocktailsDataSource.getSelectedCategoryIndex() {
             applyFiltersButton.isEnabled = false
         } else { applyFiltersButton.isEnabled = true}
     }
     
 
+}
 
+extension FilterViewController {
+    
+    func loadDesign() {
+    tableView.tableFooterView = UIView()
+    applyFiltersButton.layer.borderWidth = 1
+    applyFiltersButton.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    applyFiltersButton.layer.cornerRadius = 15
+    applyFiltersButton.layer.masksToBounds = true
+    }
 }

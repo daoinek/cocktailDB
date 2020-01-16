@@ -9,6 +9,8 @@
 import UIKit
 
 class SpinnerViewController: UIViewController {
+    private var cocktailsDataSource = CocktailsDataSource()
+    
     var spinner = UIActivityIndicatorView(style: .whiteLarge)
     
     override func loadView() {
@@ -22,4 +24,5 @@ class SpinnerViewController: UIViewController {
         spinner.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         spinner.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
+    
 }

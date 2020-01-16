@@ -10,30 +10,20 @@ import UIKit
 import Alamofire
 import SDWebImage
 
-var categoryArray: [String] = []
-var selectedCategoryIndex: Int?
-var isFiltered = false
-var backFromFilter = false
-var selectedCategoryArray: [String: [[String: String]]]?
-var allCoctails: [String: [[String: String]]] = [:]
-
-
 
 class CocktailsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    
     // MARK: - Variables
     
+    lazy var spinnerViewController = SpinnerViewController()
+    lazy var cocktailsDataSource = CocktailsDataSource()
     private var contentOffset: CGPoint?
-    
-    private var isLoadenData: Bool = false {
-        willSet{
-            if newValue {
-                tableView.reloadData()
-            }}
-    }
-    
-    private let networkClient = NetworkClient()
+    private var allCocktails: [String: [[String: String]]]?
+    private var selectedArray: [String: [[String: String]]] = [:]
+    var dataIsLoaden = false
 
+    
     
     // MARK: - Outlets
 
@@ -47,12 +37,17 @@ class CocktailsViewController: UIViewController, UITableViewDelegate, UITableVie
     override func viewDidLoad() {
         super.viewDidLoad()
                         
+        NotificationCenter.default.addObserver(self, selector: #selector(self.refresh), name: NSNotification.Name(rawValue: "newDataNotif"), object: nil)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.loadSelectedArray), name: NSNotification.Name(rawValue: "selectedCategory"), object: nil)
+        
         tableView.tableFooterView = UIView()
+        cocktailsDataSource.getCategoryCocktailsFromNetwork()
         createSpinnerView()
-        getCategoryCocktailsFromNetwork()
-
+        
         let nib = UINib.init(nibName: "CocktailCell", bundle: nil)
         self.tableView.register(nib, forCellReuseIdentifier: "customCell")
+      // self.navigationController?.navigationBar.addSubview(HeaderForCocktails.instanceFromNib())
         
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
@@ -63,9 +58,12 @@ class CocktailsViewController: UIViewController, UITableViewDelegate, UITableVie
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
-        editTitleForNavigationItem()
-        backFromFilterStatus()
-        chechFilterStatus()
+        selectedCategoryIndex = cocktailsDataSource.getSelectedCategoryIndex()
+        if cocktailsDataSource.backFromFilterStatus() {
+            self.tableView.setContentOffset(contentOffset!, animated: true)
+        }
+        
+        
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -74,65 +72,21 @@ class CocktailsViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     
-    // MARK: - functions
-
-    
-    private func chechFilterStatus() {
-        if isFiltered {
-            filterButton.image = UIImage(named: "filter_on.png")
-        } else {
-            filterButton.image = UIImage(named: "filter_off.png")
-        }
-    }
-    
-    private func backFromFilterStatus() {
-        if backFromFilter == true {
-            if (self.contentOffset != nil) {
-                self.tableView.setContentOffset(contentOffset!, animated: true)
-            }
-            backFromFilter = false
-        }
-    }
-    
-    private func editTitleForNavigationItem() {
-        if selectedCategoryIndex != nil {
-            let categoryTitle = categoryArray[selectedCategoryIndex!]
-            navigationItem.title = categoryTitle
-        } else { navigationItem.title = "Drinks"}
-    }
-    
-    private func createSpinnerView() {
-        let child = SpinnerViewController()
-        
-        addChild(child)
-        child.view.frame = view.frame
-        view.addSubview(child.view)
-        child.didMove(toParent: self)
-        
-        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-            if self.isLoadenData == true {
-                child.willMove(toParent: nil)
-                child.view.removeFromSuperview()
-                child.removeFromParent()
-                timer.invalidate()
-            }}
-    }
-    
-    private func displayWarningLable (withText text: String) {
-        let alert = UIAlertController(title: "Ошибка", message: text, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        
-        present(alert, animated: true, completion: nil)
-    }
-
-    
-    func backFromFilterWithoutChanges() {
-        backFromFilter = true
-    }
-    
-    
     @IBAction func openSearch(_ sender: UIBarButtonItem) {
         performSegue(withIdentifier: "openFilter", sender: nil)
+    }
+
+
+    @objc func refresh() {
+        allCocktails = cocktailsDataSource.getAllCoctailsArray()
+        dataIsLoaden = true
+        self.tableView.reloadData() // a refresh the tableView.
+    }
+    
+    @objc func loadSelectedArray() {
+        filterButton.image = UIImage(named: "filter_on.png")
+        selectedArray = selectedCategoryArray!
+        self.tableView.reloadData()
     }
     
 
@@ -144,7 +98,9 @@ class CocktailsViewController: UIViewController, UITableViewDelegate, UITableVie
         if selectedCategoryIndex != nil {
             return 1
         }
-            return allCoctails.count
+        
+        guard let allCocktails = allCocktails?.count else { return 0 }
+        return allCocktails
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -152,15 +108,16 @@ class CocktailsViewController: UIViewController, UITableViewDelegate, UITableVie
         
         if selectedCategoryIndex != nil {
             if selectedCategoryArray != nil {
-            let valueArray = Array(selectedCategoryArray!.values)
+            let valueArray = Array(selectedArray.values)
                 return valueArray[0].count
             } else {
-                displayWarningLable(withText: "Данные еще не загрузились")
+                cocktailsDataSource.displayWarningLable(text: "Данные еще не загрузились", vc: self)
                 selectedCategoryIndex = nil
             }
         }
         
-        let valueArray = Array(allCoctails.values)
+        guard let valueArray0 = allCocktails else { return 0 }
+        let valueArray = Array(valueArray0.values)
         return valueArray[section].count
             
     }
@@ -170,18 +127,19 @@ class CocktailsViewController: UIViewController, UITableViewDelegate, UITableVie
         let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! CustomCocktailCell
 
         if selectedCategoryIndex != nil {
-            let valueArray = Array(selectedCategoryArray!.values)
+            let valueArray = Array(selectedArray.values)
             cell.cocktailName.text = valueArray[0][indexPath.row]["strDrink"]
             
             let url = URL(string: valueArray[0][indexPath.row]["strDrinkThumb"]!)!
             cell.cocktailImage.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder_image"), options: .continueInBackground, completed: nil)
         } else {
-            let valueArray = Array(allCoctails.values)
+            if allCocktails != nil {
+            let valueArray = Array(allCocktails!.values)
             cell.cocktailName.text = valueArray[indexPath.section][indexPath.row]["strDrink"]
             
-            let url = URL(string: valueArray[0][indexPath.row]["strDrinkThumb"]!)!
+            let url = URL(string: valueArray[indexPath.section][indexPath.row]["strDrinkThumb"]!)!
             cell.cocktailImage.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder_image"), options: .continueInBackground, completed: nil)
-
+            }
         }
         
         return cell
@@ -202,47 +160,35 @@ class CocktailsViewController: UIViewController, UITableViewDelegate, UITableVie
         if selectedCategoryIndex != nil {
             return nil
         } else {
-            let category = Array(allCoctails.keys)            
+            let category = Array(allCocktails!.keys)
             return category[section]
         }
+    }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+            let destinationVC = segue.destination as! FilterViewController
+            destinationVC.allCocktails = allCocktails
     }
 
 
 }
 
-extension CocktailsViewController {
-    
-    private func getCategoryCocktailsFromNetwork() {
-        guard let url = URL(string: "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list") else {return}
+extension CocktailsViewController{
+    func createSpinnerView() {
+        let child = SpinnerViewController()
         
-        networkClient.execute(url) { (json, error) in
-            if let error = error {
-                print("Error on 'getCategoryCocktailsFromNetwork': \(error.localizedDescription)")
-            } else if let json = json {
-                let cocktailsCategoryDictionary = json["drinks"]
-                for value in cocktailsCategoryDictionary! {
-                    let category = value["strCategory"]!
-                    categoryArray.append(category)
-                    self.getAllCocktailsFromNetwork(for: category)
-                }
-            }
-        }
-    }
-    
-    
-    private func getAllCocktailsFromNetwork(for category: String) {
-        let changedCategoryText = category.replacingOccurrences(of: " ", with: "_") as NSString
+        addChild(child)
+        child.view.frame = view.frame
+        view.addSubview(child.view)
+        child.didMove(toParent: self)
         
-        guard let url = URL(string: "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=\(changedCategoryText)") else {return}
-        
-        networkClient.execute(url) { (json, error) in
-            if let error = error {
-                print("Error on 'getAllCocktailsFromNetwork': \(error.localizedDescription)")
-            } else if let json = json {
-                let cocktailsDictionary = json["drinks"]
-                allCoctails[category] = cocktailsDictionary!
-                self.isLoadenData = true
-            }
-        }
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            if self.dataIsLoaden == true {
+                child.willMove(toParent: nil)
+                child.view.removeFromSuperview()
+                child.removeFromParent()
+                timer.invalidate()
+            }}
     }
 }
