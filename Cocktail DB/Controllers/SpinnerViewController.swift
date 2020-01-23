@@ -9,7 +9,6 @@
 import UIKit
 
 class SpinnerViewController: UIViewController {
-    private var cocktailsDataSource = CocktailsDataSource()
     
     var spinner = UIActivityIndicatorView(style: .whiteLarge)
     

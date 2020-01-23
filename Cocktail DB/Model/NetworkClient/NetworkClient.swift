@@ -9,6 +9,7 @@
 import Foundation
 import Alamofire
 
+
 struct Category: Decodable {
     let drinks: [DrinksCategory]
 }
@@ -38,23 +39,4 @@ class NetworkClient {
             }
         }
     }
-    
-    
-    func getDataFromURL() {
-        guard let url = URL(string: "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list") else {return}
-
-        URLSession.shared.dataTask(with: url) { (data, response, error) in
-            guard let data = data else {return}
-            guard let error = error else {
-                print("ошибка")
-                return
-            }
-
-            do {
-                let categoriesCocktails = try JSONDecoder().decode(Category.self, from: data)
-                print(categoriesCocktails)
-            } catch {}
-        }
-    }
-    
 }

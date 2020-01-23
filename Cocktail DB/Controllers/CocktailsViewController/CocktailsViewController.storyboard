@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="p5l-u4-DaJ">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Drinks-->
+        <scene sceneID="kkz-1a-dkc">
+            <objects>
+                <viewController modalPresentationStyle="fullScreen" id="Yv7-DS-jv3" customClass="CocktailsViewController" customModule="Cocktail_DB" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="4p1-R1-BL6">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="RjX-Vp-uic">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="774"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="Yv7-DS-jv3" id="15G-iE-k2O"/>
+                                    <outlet property="delegate" destination="Yv7-DS-jv3" id="YgW-HS-b4E"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="TwK-E9-5l4" firstAttribute="bottom" secondItem="RjX-Vp-uic" secondAttribute="bottom" id="A5W-bJ-1f2"/>
+                            <constraint firstItem="TwK-E9-5l4" firstAttribute="trailing" secondItem="RjX-Vp-uic" secondAttribute="trailing" id="U61-gl-VKT"/>
+                            <constraint firstItem="RjX-Vp-uic" firstAttribute="top" secondItem="TwK-E9-5l4" secondAttribute="top" id="tuJ-bX-W1b"/>
+                            <constraint firstItem="RjX-Vp-uic" firstAttribute="leading" secondItem="TwK-E9-5l4" secondAttribute="leading" id="udU-ge-P3J"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="TwK-E9-5l4"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Drinks" id="dl1-Kk-Z14">
+                        <barButtonItem key="rightBarButtonItem" title="Item" image="filter_off" id="8B3-ZQ-VLo">
+                            <connections>
+                                <action selector="openSearch:" destination="Yv7-DS-jv3" id="IfY-so-Fs7"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="filterButton" destination="8B3-ZQ-VLo" id="JTp-Ba-dlK"/>
+                        <outlet property="tableView" destination="RjX-Vp-uic" id="KJ1-3w-pLh"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="zG5-uU-apE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="281" y="85"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="95V-2w-mHi">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" modalPresentationStyle="fullScreen" id="p5l-u4-DaJ" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="RAK-mW-KcW">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <color key="barTintColor" red="0.31897127339999998" green="0.43133328050000003" blue="0.32742169659999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <textAttributes key="titleTextAttributes">
+                            <fontDescription key="fontDescription" name="KohinoorBangla-Light" family="Kohinoor Bangla" pointSize="22"/>
+                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </textAttributes>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Yv7-DS-jv3" kind="relationship" relationship="rootViewController" id="VDl-a6-xNp"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Apd-dv-caH" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-497.10144927536237" y="85.714285714285708"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="filter_off" width="24" height="24"/>
+    </resources>
+</document>

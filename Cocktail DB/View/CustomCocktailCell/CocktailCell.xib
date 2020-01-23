@@ -17,8 +17,8 @@
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="njF-sY-1XI">
                     <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
                     <subviews>
-                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="person.circle" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="NdH-Tv-7jm">
-                            <rect key="frame" x="8" y="14.5" width="72" height="71"/>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder_image" translatesAutoresizingMaskIntoConstraints="NO" id="NdH-Tv-7jm">
+                            <rect key="frame" x="8" y="14" width="72" height="72"/>
                             <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="72" id="EpU-tt-FLh"/>
@@ -62,6 +62,6 @@
         </view>
     </objects>
     <resources>
-        <image name="person.circle" catalog="system" width="64" height="60"/>
+        <image name="placeholder_image" width="480" height="480"/>
     </resources>
 </document>

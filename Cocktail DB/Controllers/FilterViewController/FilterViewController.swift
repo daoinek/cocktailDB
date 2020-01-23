@@ -8,16 +8,21 @@
 
 import UIKit
 
+public protocol FiltersViewControllerDelegate {
+    func filtersDidChange(filters: String)
+    func backFromFilter()
+}
+
 class FilterViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
+    private var delegate: FiltersViewControllerDelegate?
     
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var applyFiltersButton: UIButton!
 
-    private var selectedIndex: Int?
-    var allCocktails: [String: [[String: String]]]?
-    let cocktailsViewController = CocktailsViewController()
-    let cocktailsDataSource = CocktailsDataSource()
+    private static var allCocktailsCategory = [String]()    
+    static var selectedCategoryNameFromTable: String?
+    private var currentSelectedFilter = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +38,19 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
         }
     }
     
+    static func createVC(with category: [String], delegate: FiltersViewControllerDelegate, selectedCategory: String?) -> FilterViewController {
+        let vc = UIStoryboard(name: "FilterViewController", bundle: nil).instantiateViewController(withIdentifier: "FilterViewController") as! FilterViewController
+        
+        if FilterViewController.allCocktailsCategory.isEmpty {
+            FilterViewController.allCocktailsCategory = category
+        }
+        
+        if selectedCategory != nil { FilterViewController.selectedCategoryNameFromTable = selectedCategory!}
+        vc.delegate = delegate
+        
+        return vc
+    }
+    
     
     
     
@@ -43,14 +61,13 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     
     
     @objc func back(sender: UIBarButtonItem) {
-        cocktailsDataSource.backFromFilterWithoutChanges(status: true)
-        _ = navigationController?.popViewController(animated: true)
+        delegate!.backFromFilter()
+        navigationController?.popViewController(animated: true)
     }
     
     @IBAction func applyFilters(_ sender: UIButton) {
-        guard let selectedIndex = selectedIndex else { return }
-        cocktailsDataSource.selectCategory(forIndex: selectedIndex, allCoctails: allCocktails!)
-            navigationController?.popViewController(animated: true)
+        delegate!.filtersDidChange(filters: currentSelectedFilter)
+        navigationController?.popViewController(animated: true)
     }
     
     
@@ -65,17 +82,14 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         
-        let valueArray = Array(allCocktails!.keys)
-        print(valueArray)
-        return valueArray.count
+        return FilterViewController.allCocktailsCategory.count
     }
 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
        let cell = tableView.dequeueReusableCell(withIdentifier: "categoryInFilter", for: indexPath)
         
-        let valueArray = Array(allCocktails!.keys)
-        cell.textLabel?.text = valueArray[indexPath.row]
+        cell.textLabel?.text = FilterViewController.allCocktailsCategory[indexPath.row]
         
         return cell
     }
@@ -87,11 +101,15 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedIndex = indexPath.row
+        let selectedIndex = indexPath.row
         
-        if selectedIndex == cocktailsDataSource.getSelectedCategoryIndex() {
-            applyFiltersButton.isEnabled = false
-        } else { applyFiltersButton.isEnabled = true}
+        currentSelectedFilter = FilterViewController.allCocktailsCategory[selectedIndex]
+        
+        guard let select = FilterViewController.selectedCategoryNameFromTable else { return }
+        
+        if FilterViewController.allCocktailsCategory[indexPath.row] == select
+        {applyFiltersButton.isEnabled = false } else {applyFiltersButton.isEnabled = true}
+        
     }
     
 
@@ -105,5 +123,6 @@ extension FilterViewController {
     applyFiltersButton.layer.borderColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
     applyFiltersButton.layer.cornerRadius = 15
     applyFiltersButton.layer.masksToBounds = true
+        
     }
 }

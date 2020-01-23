@@ -8,80 +8,55 @@
 
 import UIKit
 
-var selectedCategoryArray: [String: [[String: String]]]?
-var selectedCategoryIndex: Int?
+
+protocol CocktailsDataSourceDelegate {
+    func loadAllCategory()
+}
 
 
 class CocktailsDataSource {
     
-    static let sharedInstance = CocktailsDataSource()
-
-    
     private var networkClient = NetworkClient()
     private let cocktailsVC = CocktailsViewController()
-    private var categories = Array<String>()
-//    var selectedCategoryArray: SelectedCategoryArray = .init(selectedCategoryArray: [:])
-    var allCoctails: [String: [[String: String]]] = [:]
-    private var isFiltered: Bool = false {
-        didSet{
-
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "selectedCategory"), object: nil)
-            }
+    
+    var delegate: CocktailsDataSourceDelegate?
+    
+    init(delegate: CocktailsDataSourceDelegate) {
+       self.delegate = delegate
     }
-    private var backFromFilter = false
-    private var isLoadenData: Bool = false {
+    
+    static var dataIsLoaden = false
+    static var filterIsLoaden = false
+    private var categories: [String] = []
+    var myDrinks: [String: [Cocktail]] = [:]
+    private var allCocktails: [String: [[String: String]]] = [:]
+    private var drinks: [String: [[String: String]]] = [:]
+    private var selectedCategoryName: String?
+        
+    var loadenData = false {
         willSet{
             if newValue {
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "newDataNotif"), object: nil)
+                CocktailsDataSource.dataIsLoaden = true
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "newData"), object: nil)
             }}
     }
     
     
-        
-    func dataIsLoaden() -> Bool {
-        return isLoadenData
+    func getCategories() -> [String] {
+        let category = Array(drinks.keys)
+        return category
     }
     
-    
-    func getSelectedCategoryIndex() -> Int? {
-        return selectedCategoryIndex
-    }
-    
-    func backFromFilterWithoutChanges(status: Bool) {
-        backFromFilter = status
-    }
-    
-    func getAllCoctailsArray() -> [String: [[String: String]]] {
-        return allCoctails
+    func getSelectedCategoryName() -> String? {
+        return selectedCategoryName
     }
     
     
     func displayWarningLable(text: String, vc: UIViewController) {
         let alert = UIAlertController(title: "Ошибка", message: text, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        
         vc.present(alert, animated: true, completion: nil)
     }
-    
-    func selectCategory(forIndex index: Int, allCoctails: [String: [[String: String]]]) {
-        selectedCategoryIndex = index
-        let allCategory = Array(allCoctails.keys)
-        let category = allCategory[index]
-        let array = allCoctails[category]
-        selectedCategoryArray = [category: array!]
-        print("myselectedCategoryArray: \(selectedCategoryArray)")
-        
-        isFiltered = true
-    }
-    
-    func backFromFilterStatus() -> Bool {
-        if backFromFilter == true {
-            backFromFilter = false
-            return true
-        }
-        return false
-    }
-    
     
     func getCategoryCocktailsFromNetwork() {
         guard let url = URL(string: "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list") else {return}
@@ -111,12 +86,48 @@ class CocktailsDataSource {
                 print("Error on 'getAllCocktailsFromNetwork': \(error.localizedDescription)")
             } else if let json = json {
                 let cocktailsDictionary = json["drinks"]
-                self.allCoctails[category] = cocktailsDictionary!
-                self.isLoadenData = true
-                self.isLoadenData = false
+                self.allCocktails[category] = cocktailsDictionary!
+                self.drinks[category] = cocktailsDictionary!
+                self.loadenData = true
+                self.loadenData = false                
             }
         }
     }
     
+    
+    //MARK - Cocktails Table Info
+    
+    func numberOfSections() -> Int {
+        return drinks.count
+    }
+    
+    func categoryForSection(_ section: Int) -> String {
+        let category = Array(drinks.keys)
+        return category[section]
+    }
+    
+    func numberOfRowsInSection(section: Int) -> Int {
+        guard drinks.count > section else { return 0 }
+        let valueArray = Array(drinks.values)
+        return valueArray[section].count
+    }
+    
+    func drinkForIndexPath(indexPath: IndexPath) -> [String : String] {
+        guard drinks.count > indexPath.section else { return ["":""]}
+        let valueArray = Array(drinks.values)
+        return valueArray[indexPath.section][indexPath.row]
+    }
+    
+    func setCategoriesToFilter(from categoriesNames: String) {
+        if categoriesNames.isEmpty {
+            drinks = allCocktails
+            selectedCategoryName = nil
+        } else {
+            selectedCategoryName = categoriesNames
+            drinks = [categoriesNames: allCocktails[categoriesNames]!]
+            CocktailsDataSource.filterIsLoaden = true
+        }
+        
+    }
     
 }

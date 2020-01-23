@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Filter-->
+        <scene sceneID="kj1-7S-oFG">
+            <objects>
+                <viewController storyboardIdentifier="FilterViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="6YQ-Wv-KUW" customClass="FilterViewController" customModule="Cocktail_DB" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="gyX-oz-v3Q">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="n2f-jk-wE9">
+                                <rect key="frame" x="0.0" y="44" width="414" height="740"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="categoryInFilter" id="dRt-Ez-ie2">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="43.5"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="dRt-Ez-ie2" id="PB2-Zn-kZn">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="6YQ-Wv-KUW" id="1wU-lp-8v8"/>
+                                    <outlet property="delegate" destination="6YQ-Wv-KUW" id="vyH-Oc-G7T"/>
+                                </connections>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="o6W-UD-Xi3">
+                                <rect key="frame" x="70" y="799" width="274" height="48"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="48" id="rfs-fh-19v"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="KohinoorBangla-Light" family="Kohinoor Bangla" pointSize="19"/>
+                                <state key="normal" title="Apply Filters">
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="applyFilters:" destination="6YQ-Wv-KUW" eventType="touchUpInside" id="5OC-z5-tEl"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="o6W-UD-Xi3" firstAttribute="leading" secondItem="y3l-X1-b1n" secondAttribute="leading" constant="70" id="3W2-Z9-hCb"/>
+                            <constraint firstItem="n2f-jk-wE9" firstAttribute="top" secondItem="y3l-X1-b1n" secondAttribute="top" id="Aas-08-RJa"/>
+                            <constraint firstItem="y3l-X1-b1n" firstAttribute="bottom" secondItem="o6W-UD-Xi3" secondAttribute="bottom" constant="15" id="BXk-nD-j7w"/>
+                            <constraint firstItem="n2f-jk-wE9" firstAttribute="leading" secondItem="y3l-X1-b1n" secondAttribute="leading" id="D3n-tn-Gel"/>
+                            <constraint firstItem="y3l-X1-b1n" firstAttribute="trailing" secondItem="o6W-UD-Xi3" secondAttribute="trailing" constant="70" id="DZp-N6-2u8"/>
+                            <constraint firstItem="y3l-X1-b1n" firstAttribute="trailing" secondItem="n2f-jk-wE9" secondAttribute="trailing" id="E0v-cx-j1d"/>
+                            <constraint firstItem="o6W-UD-Xi3" firstAttribute="top" secondItem="n2f-jk-wE9" secondAttribute="bottom" constant="15" id="Kxx-sm-o8q"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="y3l-X1-b1n"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Filter" id="qke-qk-atC"/>
+                    <connections>
+                        <outlet property="applyFiltersButton" destination="o6W-UD-Xi3" id="R2e-lJ-f7b"/>
+                        <outlet property="tableView" destination="n2f-jk-wE9" id="kfD-4l-lBB"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="d9e-Wd-jAo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1131.8840579710145" y="85.714285714285708"/>
+        </scene>
+    </scenes>
+</document>

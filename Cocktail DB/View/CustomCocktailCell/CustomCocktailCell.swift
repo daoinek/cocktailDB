@@ -20,6 +20,10 @@ class CustomCocktailCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
     }
+    
+    static func cellHeight() -> CGFloat {
+        return 100
+    }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
