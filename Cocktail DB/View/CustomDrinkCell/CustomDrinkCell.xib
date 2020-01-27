@@ -10,7 +10,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <view contentMode="scaleToFill" id="p6I-Og-lks" customClass="CustomCocktailCell" customModule="Cocktail_DB" customModuleProvider="target">
+        <view contentMode="scaleToFill" id="p6I-Og-lks" customClass="CustomDrinkCell" customModule="Cocktail_DB" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <subviews>

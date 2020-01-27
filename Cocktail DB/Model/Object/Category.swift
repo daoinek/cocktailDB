@@ -12,8 +12,12 @@ typealias Categories = ItemsLIst<Category>
 
 class Category: NSObject, Mappable {
         
+    // MARK: Properties
+
     var name: String?
         
+    // MARK: Init
+
     required convenience init?(map: Map) {
         self.init()
     }

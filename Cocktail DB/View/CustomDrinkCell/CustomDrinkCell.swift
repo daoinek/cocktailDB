@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CustomCocktailCell: UITableViewCell {
+class CustomDrinkCell: UITableViewCell {
 
     @IBOutlet weak var cellView: UIView!
     @IBOutlet weak var cocktailImage: UIImageView!

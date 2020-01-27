@@ -10,15 +10,18 @@ import UIKit
 import Alamofire
 import SDWebImage
 
+protocol DrinksDataSourceDelegate {
+    func loadAllCategory()
+    func didLoadCategories()
+    func didLoadDrinksForSection(section: Int)
+    func willLoadDrinks()
+}
 
-class CocktailsViewController: UIViewController, CocktailsDataSourceDelegate {
-    
-    private lazy var dataSource = CocktailsDataSource(delegate: self)
-    private lazy var spinnerViewController = SpinnerViewController()
-    private var contentOffset: CGPoint?
-    
-    private var spinner = false
 
+class DrinksViewController: UIViewController, DrinksDataSourceDelegate {
+    
+    private lazy var dataSource = DrinksDataSource(delegate: self)
+    private lazy var spinnerVC = SpinnerViewController()
     
     
     // MARK: - Outlets
@@ -54,7 +57,7 @@ class CocktailsViewController: UIViewController, CocktailsDataSourceDelegate {
     }
     
     private func conectNib() {
-        let cellNib = UINib.init(nibName: "CocktailCell", bundle: nil)
+        let cellNib = UINib.init(nibName: "CustomDrinkCell", bundle: nil)
         self.tableView.register(cellNib, forCellReuseIdentifier: "customCell")
     }
     
@@ -71,7 +74,6 @@ class CocktailsViewController: UIViewController, CocktailsDataSourceDelegate {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        self.contentOffset = self.tableView.contentOffset
     }
     
     
@@ -84,7 +86,7 @@ class CocktailsViewController: UIViewController, CocktailsDataSourceDelegate {
         let filters = dataSource.getCategoriesNames()
         guard !filters.isEmpty else { return }
         
-        let filtersViewController = FilterViewController.createVC(with: filters, delegate: self, selectedCategory: dataSource.getSelectedCategoryName())
+        let filtersViewController = FilterViewController.createVC(with: filters, delegate: self)
         self.navigationController?.pushViewController(filtersViewController, animated: true)
     }
     
@@ -94,7 +96,7 @@ class CocktailsViewController: UIViewController, CocktailsDataSourceDelegate {
 
 }
 
-extension CocktailsViewController: UITableViewDelegate, UITableViewDataSource {
+extension DrinksViewController: UITableViewDelegate, UITableViewDataSource {
         // MARK: - Table view data source
 
         func numberOfSections(in tableView: UITableView) -> Int {
@@ -108,7 +110,7 @@ extension CocktailsViewController: UITableViewDelegate, UITableViewDataSource {
 
 
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! CustomCocktailCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! CustomDrinkCell
 
             let drink = dataSource.drinkForIndexPath(indexPath: indexPath)
 
@@ -123,7 +125,7 @@ extension CocktailsViewController: UITableViewDelegate, UITableViewDataSource {
         
         
         func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-            return CustomCocktailCell.cellHeight()
+            return CustomDrinkCell.cellHeight()
         }
         
         func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -132,13 +134,14 @@ extension CocktailsViewController: UITableViewDelegate, UITableViewDataSource {
         }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        guard dataSource.getSelectedCategoryName() == nil else { return nil}
-        return dataSource.categoryForSection(section).name
+        let category = dataSource.categoryForSection(section)
+
+        return category.name?.uppercased() ?? NSLocalizedString("Empty name", comment: "")
     }
     
 }
 
-extension CocktailsViewController {
+extension DrinksViewController {
     func createSpinnerView() {
         let child = SpinnerViewController()
         
@@ -148,7 +151,7 @@ extension CocktailsViewController {
         child.didMove(toParent: self)
         
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-            if self.spinner == true {
+            if SpinnerViewController.spinner == true {
                 child.willMove(toParent: nil)
                 child.view.removeFromSuperview()
                 child.removeFromParent()
@@ -164,18 +167,14 @@ extension CocktailsViewController {
 
     // MARK: - DrinksViewControllerDeleghate
 
-extension CocktailsViewController: FiltersViewControllerDelegate {
+extension DrinksViewController: FiltersViewControllerDelegate {
     
-    func filtersDidChange(filters: String) {
-        filterIsSelected(!filters.isEmpty)
-        dataSource.setCategoriesToFilter(from: [filters])
-        if filters == "" {navigationItem.title = "Drinks"} else {
-            navigationItem.title = filters }
-    }
     
-    func backFromFilter() {
-        self.tableView.setContentOffset(contentOffset!, animated: true)
-        self.tableView.reloadData()
+    func filtersDidChange(category: String) {
+        filterIsSelected(!category.isEmpty)
+        dataSource.setCategoriesToFilter(from: [category])
+        if category == "" {navigationItem.title = "Drinks"} else {
+            navigationItem.title = category }
     }
     
     func didLoadCategories() {
@@ -187,12 +186,12 @@ extension CocktailsViewController: FiltersViewControllerDelegate {
     func didLoadDrinksForSection(section: Int) {
         tableView.reloadSections(IndexSet(integer: section), with: .automatic)
         if section == dataSource.numberOfSections() - 1 {
-            spinner = true
+            SpinnerViewController.spinner = true
         }
     }
     
     func willLoadDrinks() {
-        spinner = false
+        SpinnerViewController.spinner = false
         createSpinnerView()
         tableView.reloadData()
     }

@@ -10,6 +10,8 @@ import UIKit
 
 class SpinnerViewController: UIViewController {
     
+    static var spinner = false
+    
     var spinner = UIActivityIndicatorView(style: .whiteLarge)
     
     override func loadView() {

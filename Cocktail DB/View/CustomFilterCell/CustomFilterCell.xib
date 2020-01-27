@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <customFonts key="customFonts">
+        <array key="Roboto-Medium.ttf">
+            <string>Roboto-Medium</string>
+        </array>
+    </customFonts>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="none" indentationWidth="10" id="VwT-mY-oAU" customClass="CustomFilterCell" customModule="Cocktail_DB" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="VwT-mY-oAU" id="2hM-IO-Inv">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TM9-JE-STU">
+                        <rect key="frame" x="28" y="0.0" width="347" height="44"/>
+                        <fontDescription key="fontDescription" name="Roboto-Medium" family="Roboto" pointSize="16"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+            </tableViewCellContentView>
+            <constraints>
+                <constraint firstItem="TM9-JE-STU" firstAttribute="top" secondItem="VwT-mY-oAU" secondAttribute="top" id="1JG-9f-NBe"/>
+                <constraint firstAttribute="trailing" secondItem="TM9-JE-STU" secondAttribute="trailing" id="CXz-pw-ncP"/>
+                <constraint firstAttribute="bottom" secondItem="TM9-JE-STU" secondAttribute="bottom" id="eYi-ni-6vw"/>
+                <constraint firstItem="TM9-JE-STU" firstAttribute="leading" secondItem="VwT-mY-oAU" secondAttribute="leading" constant="28" id="yUy-iL-HsF"/>
+            </constraints>
+            <connections>
+                <outlet property="filterNameLabel" destination="TM9-JE-STU" id="JGc-jC-Yu1"/>
+            </connections>
+            <point key="canvasLocation" x="118" y="68"/>
+        </tableViewCell>
+    </objects>
+</document>

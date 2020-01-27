@@ -10,56 +10,24 @@ import UIKit
 import Moya
 import RxSwift
 
-protocol CocktailsDataSourceDelegate {
-    func loadAllCategory()
-    func didLoadCategories()
-    func didLoadDrinksForSection(section: Int)
-    func willLoadDrinks()
-}
 
-
-class CocktailsDataSource {
+class DrinksDataSource {
     
-    private var networkClient = CocktailService()
+    // MARK: - Properties
+    
+    var delegate: DrinksDataSourceDelegate?
+    
+    private var networkClient = DrinkService()
     private let disposeBag = DisposeBag()
-    private let cocktailsVC = CocktailsViewController()
-    
-    var delegate: CocktailsDataSourceDelegate?
-    
-    init(delegate: CocktailsDataSourceDelegate) {
-       self.delegate = delegate
-    }
-    
-    static var dataIsLoaden = false
-    static var filterIsLoaden = false
+    private let drinksVC = DrinksViewController()
     private var allCategories = [Category]()
     private var categories = [Category]()
-    private var allCocktails = [[Drink]]()
-    private var selectedCategoryName: String?
-        
-    var loadenData = false {
-        willSet{
-            if newValue {
-                CocktailsDataSource.dataIsLoaden = true
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: "newData"), object: nil)
-            }}
-    }
+    private var allCocktails = [[Drink]]()    
     
- /*
-    func getCategories() -> [String] {
-        let category = Array(drinks.keys)
-        return category
-    }
-   */
-    func getSelectedCategoryName() -> String? {
-        return selectedCategoryName
-    }
+    // MARK: - Initialization
     
-    
-    func displayWarningLable(text: String, vc: UIViewController) {
-        let alert = UIAlertController(title: "Ошибка", message: text, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-        vc.present(alert, animated: true, completion: nil)
+    init(delegate: DrinksDataSourceDelegate) {
+       self.delegate = delegate
     }
 
     func getCategoryCocktailsFromNetwork() {
@@ -80,6 +48,9 @@ class CocktailsDataSource {
         }).disposed(by: disposeBag)
     }
     
+    
+    //MARK: -  Did load dataFromNetwork methods
+    
     private func drinksDidLoad(сategory: Category, responce: Drinks) {
         guard let section = categories.firstIndex(of: сategory),
             let drinksForSection = responce.list else { return }
@@ -87,7 +58,6 @@ class CocktailsDataSource {
         allCocktails.append(drinksForSection)
         delegate?.didLoadDrinksForSection(section: section)
     }
-    
     
     private func categoriesDidLoad(response: Categories) {
         categories.removeAll()
@@ -106,7 +76,7 @@ class CocktailsDataSource {
         delegate?.didLoadDrinksForSection(section: section)
     }
     
-    //MARK - Cocktails Table Info
+    //MARK - Drinks Table Info
     
     func numberOfSections() -> Int {
         return categories.count

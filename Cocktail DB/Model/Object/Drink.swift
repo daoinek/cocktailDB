@@ -12,10 +12,14 @@ typealias Drinks = ItemsLIst<Drink>
 
 class Drink: Mappable {
         
+    // MARK: Properties
+    
     var id: Int?
     var name: String?
     var imageUrl: String?
         
+    // MARK: Init
+
     required convenience init?(map: Map) {
         self.init()
     }

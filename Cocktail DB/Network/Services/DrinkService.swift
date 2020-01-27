@@ -10,14 +10,8 @@ import Moya
 import RxSwift
 import Moya_ObjectMapper
 
-protocol DrinkServiceProtocol {
-    
-    @discardableResult func loadCategories() -> Observable<Categories>
-    @discardableResult func loadDrinks(categoryName: String) -> Observable<Drinks>
-}
 
-
-class CocktailService: DrinkServiceProtocol {
+class DrinkService: DrinkServiceProtocol {
     
     private var drinkProvider = MoyaProvider<DrinkProvider>()
     
