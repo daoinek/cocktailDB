@@ -20,7 +20,7 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var applyFiltersButton: UIButton!
 
-    private static var allCocktailsCategory = [String]()    
+    static var allCocktailsCategory = [String]()
     static var selectedCategoryNameFromTable: String?
     private var currentSelectedFilter = ""
     

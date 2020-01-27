@@ -1,22 +1,50 @@
 PODS:
-  - Alamofire (4.9.1)
-  - SDWebImage (5.4.2):
-    - SDWebImage/Core (= 5.4.2)
-  - SDWebImage/Core (5.4.2)
+  - Alamofire (5.0.0-rc.3)
+  - Moya (14.0.0-beta.6):
+    - Moya/Core (= 14.0.0-beta.6)
+  - Moya-ObjectMapper/Core (2.9):
+    - Moya (~> 14.0.0-beta.6)
+    - ObjectMapper
+  - Moya-ObjectMapper/RxSwift (2.9):
+    - Moya-ObjectMapper/Core
+    - Moya/RxSwift
+    - RxSwift
+  - Moya/Core (14.0.0-beta.6):
+    - Alamofire (= 5.0.0-rc.3)
+  - Moya/RxSwift (14.0.0-beta.6):
+    - Moya/Core
+    - RxSwift (~> 5.0)
+  - ObjectMapper (3.5.1)
+  - RxSwift (5.0.1)
+  - SDWebImage (5.5.2):
+    - SDWebImage/Core (= 5.5.2)
+  - SDWebImage/Core (5.5.2)
 
 DEPENDENCIES:
-  - Alamofire
+  - Moya
+  - Moya-ObjectMapper/RxSwift
+  - Moya/RxSwift
+  - ObjectMapper
+  - RxSwift
   - SDWebImage
 
 SPEC REPOS:
   trunk:
     - Alamofire
+    - Moya
+    - Moya-ObjectMapper
+    - ObjectMapper
+    - RxSwift
     - SDWebImage
 
 SPEC CHECKSUMS:
-  Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
-  SDWebImage: 4ca2dc4eefae4224bea8f504251cda485a363745
+  Alamofire: ca8c0de6906873be89d6deec5c8de279e00bf872
+  Moya: d4821fbcb3e784f34d2f82869e6855057a0b85d1
+  Moya-ObjectMapper: 967a99d9ea3aa9c93ddbe112aeca3667f53bfe93
+  ObjectMapper: 70187b8941977c62ccfb423caf6b50be405cabf0
+  RxSwift: e2dc62b366a3adf6a0be44ba9f405efd4c94e0c4
+  SDWebImage: 4d5c027c935438f341ed33dbac53ff9f479922ca
 
-PODFILE CHECKSUM: 37843d4da144286a2f68e20a7936dc5adc705bab
+PODFILE CHECKSUM: b920596fbdd6b021221d88c16e184662c7196186
 
 COCOAPODS: 1.8.4

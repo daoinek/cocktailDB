@@ -6,11 +6,24 @@
 //  Copyright © 2020 Kostya Bershov. All rights reserved.
 //
 
-import Foundation
+import ObjectMapper
 
+typealias Drinks = ItemsLIst<Drink>
 
-struct Cocktail {
-    let name: String?
-    let id: String?
-    let img: String?
+class Drink: Mappable {
+        
+    var id: Int?
+    var name: String?
+    var imageUrl: String?
+        
+    required convenience init?(map: Map) {
+        self.init()
+    }
+    
+    func mapping(map: Map) {
+        id <- map["idDrink"]
+        name <- map["strDrink"]
+        imageUrl <- map["strDrinkThumb"]
+    }
 }
+

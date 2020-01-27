@@ -7,36 +7,78 @@
 //
 
 import Foundation
-import Alamofire
+import Moya
 
 
-struct Category: Decodable {
-    let drinks: [DrinksCategory]
+protocol NetworkClient {}
+
+extension NetworkClient {
+    
+    // MARK: - Properties
+    
+    var baseURL: URL {
+        guard let url = URL(string: "https://www.thecocktaildb.com/api/json/v1/1/") else {
+            fatalError("URL error")
+        }
+        return url
+    }
+    var path: String {
+        return ""
+    }
+    var method: Moya.Method {
+        return .get
+    }
+    var task: Task {
+        return .requestPlain
+    }
+    var sampleData: Data {
+        return "Not used?".data(using: .utf8)!
+    }
+    var headers: [String: String]? {
+        return ["Content-type": "application/json"]
+    }
+    var authorizationType: AuthorizationType {
+        return .basic
+    }
 }
 
-struct DrinksCategory: Decodable {
-     let strCategory: String
+enum DrinkProvider : NetworkClient {
+    case listCategories
+    case listDrinks(categoryName: String)
+    
 }
 
-class NetworkClient {
+extension DrinkProvider : TargetType {
     
-    typealias WebResponse = ([String: [[String: String]]]?, Error?) -> Void
+    var path: String {
+        switch self {
+        case .listCategories:
+            return "list.php"
+        case .listDrinks:
+            return "filter.php"
+        }
+    }
     
-    func execute(_ url: URL, completion: @escaping WebResponse) {
+    var method: Moya.Method {
+        return .get
+    }
+    
+    var task: Task {
+        switch self {
+        case .listCategories:
+            let parameters = ["c": "list"]
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        case .listDrinks(let categoryName):
+            let parameters = ["c": categoryName]
+            return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
+        }
         
-        var urlRequest = URLRequest(url: url)
-        urlRequest.httpMethod = "GET"
-        
-        Alamofire.request(urlRequest)
-        
-        Alamofire.request(url).validate().responseJSON { response in
-            if let error = response.error {
-                completion(nil, error)
-            } else if let categoryListArray = response.result.value as? [String: [[String: String]]] {
-                completion(categoryListArray, nil)
-            } else if let cocktailListArray = response.result.value as? [String: [[String: String]]] {
-                completion(cocktailListArray, nil)
-            }
+    }
+    
+    var headers: [String: String]? {
+        switch self {
+        default:
+            return ["Content-type": "application/json"]
         }
     }
 }

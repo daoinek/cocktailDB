@@ -17,6 +17,9 @@ class CocktailsViewController: UIViewController, CocktailsDataSourceDelegate {
     private lazy var spinnerViewController = SpinnerViewController()
     private var contentOffset: CGPoint?
     
+    private var spinner = false
+
+    
     
     // MARK: - Outlets
     
@@ -28,7 +31,7 @@ class CocktailsViewController: UIViewController, CocktailsDataSourceDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        createSpinnerView(type: "dataIsLoaden")
+        createSpinnerView()
         loadAllCategory()
         addObserver()
         conectNib()
@@ -78,10 +81,10 @@ class CocktailsViewController: UIViewController, CocktailsDataSourceDelegate {
     
     
     private func routeToFilters() {
-        let allCategories = dataSource.getCategories()
-        guard !allCategories.isEmpty else { return }
+        let filters = dataSource.getCategoriesNames()
+        guard !filters.isEmpty else { return }
         
-        let filtersViewController = FilterViewController.createVC(with: allCategories, delegate: self, selectedCategory: dataSource.getSelectedCategoryName())
+        let filtersViewController = FilterViewController.createVC(with: filters, delegate: self, selectedCategory: dataSource.getSelectedCategoryName())
         self.navigationController?.pushViewController(filtersViewController, animated: true)
     }
     
@@ -100,7 +103,6 @@ extension CocktailsViewController: UITableViewDelegate, UITableViewDataSource {
         }
 
         func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            
             return dataSource.numberOfRowsInSection(section: section)
         }
 
@@ -109,10 +111,11 @@ extension CocktailsViewController: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! CustomCocktailCell
 
             let drink = dataSource.drinkForIndexPath(indexPath: indexPath)
-            cell.cocktailName.text = drink["strDrink"]
+
+            cell.cocktailName.text = drink.name
             
-            if drink["strDrinkThumb"] != nil {
-            let url = URL(string: drink["strDrinkThumb"]!)!
+            if drink.imageUrl != nil {
+                let url = URL(string: drink.imageUrl!)!
             cell.cocktailImage.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder_image"), options: .continueInBackground, completed: nil)
             }
             return cell
@@ -130,13 +133,13 @@ extension CocktailsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         guard dataSource.getSelectedCategoryName() == nil else { return nil}
-        return dataSource.categoryForSection(section)
+        return dataSource.categoryForSection(section).name
     }
     
 }
 
 extension CocktailsViewController {
-    func createSpinnerView(type: String) {
+    func createSpinnerView() {
         let child = SpinnerViewController()
         
         addChild(child)
@@ -145,9 +148,7 @@ extension CocktailsViewController {
         child.didMove(toParent: self)
         
         Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
-            var spinner = false
-            if type == "dataIsLoaden" {spinner = CocktailsDataSource.dataIsLoaden } else { spinner = CocktailsDataSource.filterIsLoaden }
-            if spinner == true {
+            if self.spinner == true {
                 child.willMove(toParent: nil)
                 child.view.removeFromSuperview()
                 child.removeFromParent()
@@ -167,8 +168,7 @@ extension CocktailsViewController: FiltersViewControllerDelegate {
     
     func filtersDidChange(filters: String) {
         filterIsSelected(!filters.isEmpty)
-        dataSource.setCategoriesToFilter(from: filters)
-        createSpinnerView(type: "filterIsLoaden")
+        dataSource.setCategoriesToFilter(from: [filters])
         if filters == "" {navigationItem.title = "Drinks"} else {
             navigationItem.title = filters }
     }
@@ -176,5 +176,24 @@ extension CocktailsViewController: FiltersViewControllerDelegate {
     func backFromFilter() {
         self.tableView.setContentOffset(contentOffset!, animated: true)
         self.tableView.reloadData()
+    }
+    
+    func didLoadCategories() {
+        tableView.reloadData()
+        
+        dataSource.loadDrinksByCategories(dataSource.getCategories())
+    }
+    
+    func didLoadDrinksForSection(section: Int) {
+        tableView.reloadSections(IndexSet(integer: section), with: .automatic)
+        if section == dataSource.numberOfSections() - 1 {
+            spinner = true
+        }
+    }
+    
+    func willLoadDrinks() {
+        spinner = false
+        createSpinnerView()
+        tableView.reloadData()
     }
 }

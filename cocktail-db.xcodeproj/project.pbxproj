@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6511601C23DEDA5700658B9B /* ItemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6511601B23DEDA5700658B9B /* ItemList.swift */; };
+		6511601E23DEDB7100658B9B /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6511601D23DEDB7100658B9B /* Category.swift */; };
+		6511602023DEE16700658B9B /* CocktailService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6511601F23DEE16700658B9B /* CocktailService.swift */; };
 		65267BCE23D8E2F300F9A84F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65267BCD23D8E2F300F9A84F /* SceneDelegate.swift */; };
 		65267BD823D8E36800F9A84F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65267BD723D8E36800F9A84F /* AppDelegate.swift */; };
 		6592671423D932F9004D4E9E /* CocktailsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6592671323D932F9004D4E9E /* CocktailsModel.swift */; };
@@ -28,6 +31,9 @@
 
 /* Begin PBXFileReference section */
 		6371F2CBD5FB259F4A41B11D /* Pods-cocktail-db.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-cocktail-db.debug.xcconfig"; path = "Target Support Files/Pods-cocktail-db/Pods-cocktail-db.debug.xcconfig"; sourceTree = "<group>"; };
+		6511601B23DEDA5700658B9B /* ItemList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemList.swift; sourceTree = "<group>"; };
+		6511601D23DEDB7100658B9B /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		6511601F23DEE16700658B9B /* CocktailService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CocktailService.swift; sourceTree = "<group>"; };
 		65267BCD23D8E2F300F9A84F /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		65267BD723D8E36800F9A84F /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6592670E23D931A6004D4E9E /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -75,6 +81,8 @@
 			isa = PBXGroup;
 			children = (
 				6592671323D932F9004D4E9E /* CocktailsModel.swift */,
+				6511601D23DEDB7100658B9B /* Category.swift */,
+				6511601B23DEDA5700658B9B /* ItemList.swift */,
 				6592671523D93310004D4E9E /* CocktailsDataSource.swift */,
 				659266EE23D92CA3004D4E9E /* NetworkClient */,
 			);
@@ -85,6 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				6592671723D93320004D4E9E /* NetworkClient.swift */,
+				6511601F23DEE16700658B9B /* CocktailService.swift */,
 			);
 			path = NetworkClient;
 			sourceTree = "<group>";
@@ -320,8 +329,11 @@
 				6592671423D932F9004D4E9E /* CocktailsModel.swift in Sources */,
 				6592672E23D934CB004D4E9E /* CustomHeaderSectionView.swift in Sources */,
 				6592672223D93349004D4E9E /* SpinnerViewController.swift in Sources */,
+				6511601C23DEDA5700658B9B /* ItemList.swift in Sources */,
 				6592672023D9333D004D4E9E /* CustomCocktailCell.swift in Sources */,
+				6511602023DEE16700658B9B /* CocktailService.swift in Sources */,
 				65267BCE23D8E2F300F9A84F /* SceneDelegate.swift in Sources */,
+				6511601E23DEDB7100658B9B /* Category.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

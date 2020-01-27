@@ -7,16 +7,21 @@
 //
 
 import UIKit
-
+import Moya
+import RxSwift
 
 protocol CocktailsDataSourceDelegate {
     func loadAllCategory()
+    func didLoadCategories()
+    func didLoadDrinksForSection(section: Int)
+    func willLoadDrinks()
 }
 
 
 class CocktailsDataSource {
     
-    private var networkClient = NetworkClient()
+    private var networkClient = CocktailService()
+    private let disposeBag = DisposeBag()
     private let cocktailsVC = CocktailsViewController()
     
     var delegate: CocktailsDataSourceDelegate?
@@ -27,10 +32,9 @@ class CocktailsDataSource {
     
     static var dataIsLoaden = false
     static var filterIsLoaden = false
-    private var categories: [String] = []
-    var myDrinks: [String: [Cocktail]] = [:]
-    private var allCocktails: [String: [[String: String]]] = [:]
-    private var drinks: [String: [[String: String]]] = [:]
+    private var allCategories = [Category]()
+    private var categories = [Category]()
+    private var allCocktails = [[Drink]]()
     private var selectedCategoryName: String?
         
     var loadenData = false {
@@ -41,12 +45,12 @@ class CocktailsDataSource {
             }}
     }
     
-    
+ /*
     func getCategories() -> [String] {
         let category = Array(drinks.keys)
         return category
     }
-    
+   */
     func getSelectedCategoryName() -> String? {
         return selectedCategoryName
     }
@@ -57,77 +61,90 @@ class CocktailsDataSource {
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         vc.present(alert, animated: true, completion: nil)
     }
-    
+
     func getCategoryCocktailsFromNetwork() {
-        guard let url = URL(string: "https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list") else {return}
+        networkClient.loadCategories().subscribe(onNext: { [weak self] (response) in
+            self?.categoriesDidLoad(response: response)
+        }).disposed(by: disposeBag)
+    }
+    
+    func loadDrinksByCategories(_ categories: [Category]) {
+        var categoriesForLoad = categories
+        guard !categoriesForLoad.isEmpty else { return }
+        guard let category = categoriesForLoad.first else { return}
         
-        networkClient.execute(url) { (json, error) in
-            if let error = error {
-                print("Error on 'getCategoryCocktailsFromNetwork': \(error.localizedDescription)")
-            } else if let json = json {
-                let cocktailsCategoryDictionary = json["drinks"]
-                for value in cocktailsCategoryDictionary! {
-                    let category = value["strCategory"]!
-                    self.categories.append(category)
-                    self.getAllCocktailsFromNetwork(for: category)
-                }
-            }
-        }
+        networkClient.loadDrinks(categoryName: category.name ?? "").subscribe(onNext: { [weak self] (response) in
+            categoriesForLoad.removeFirst()
+            self?.drinksDidLoad(сategory: category, responce: response)
+            self?.loadDrinksByCategories(categoriesForLoad)
+        }).disposed(by: disposeBag)
+    }
+    
+    private func drinksDidLoad(сategory: Category, responce: Drinks) {
+        guard let section = categories.firstIndex(of: сategory),
+            let drinksForSection = responce.list else { return }
+        
+        allCocktails.append(drinksForSection)
+        delegate?.didLoadDrinksForSection(section: section)
     }
     
     
-    func getAllCocktailsFromNetwork(for category: String) {
-        let changedCategoryText = category.replacingOccurrences(of: " ", with: "_") as NSString
+    private func categoriesDidLoad(response: Categories) {
+        categories.removeAll()
+        guard let categoriesFromServes = response.list else { return }
         
-        guard let url = URL(string: "https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=\(changedCategoryText)") else {return}
-        
-        networkClient.execute(url) { (json, error) in
-            if let error = error {
-                print("Error on 'getAllCocktailsFromNetwork': \(error.localizedDescription)")
-            } else if let json = json {
-                let cocktailsDictionary = json["drinks"]
-                self.allCocktails[category] = cocktailsDictionary!
-                self.drinks[category] = cocktailsDictionary!
-                self.loadenData = true
-                self.loadenData = false                
-            }
-        }
+        allCategories = categoriesFromServes
+        categories = categoriesFromServes
+        delegate?.didLoadCategories()
     }
     
+    private func drinksDidLoadForCategory(сategory: Category, responce: Drinks) {
+        guard let section = categories.firstIndex(of: сategory),
+            let drinksForSection = responce.list else { return }
+        
+        allCocktails.append(drinksForSection)
+        delegate?.didLoadDrinksForSection(section: section)
+    }
     
     //MARK - Cocktails Table Info
     
     func numberOfSections() -> Int {
-        return drinks.count
+        return categories.count
     }
     
-    func categoryForSection(_ section: Int) -> String {
-        let category = Array(drinks.keys)
-        return category[section]
+    func categoryForSection(_ section: Int) -> Category {
+        return categories[section]
     }
     
     func numberOfRowsInSection(section: Int) -> Int {
-        guard drinks.count > section else { return 0 }
-        let valueArray = Array(drinks.values)
-        return valueArray[section].count
+        guard allCocktails.count > section else { return 0 }
+        
+        return allCocktails[section].count
     }
     
-    func drinkForIndexPath(indexPath: IndexPath) -> [String : String] {
-        guard drinks.count > indexPath.section else { return ["":""]}
-        let valueArray = Array(drinks.values)
-        return valueArray[indexPath.section][indexPath.row]
+    func drinkForIndexPath(indexPath: IndexPath) -> Drink {
+        guard allCocktails.count > indexPath.section, allCocktails[indexPath.section].count > indexPath.row else { return Drink()}
+        return allCocktails[indexPath.section][indexPath.row]
     }
     
-    func setCategoriesToFilter(from categoriesNames: String) {
+    func getCategoriesNames() -> [String] {
+        return categories.compactMap { $0.name }
+    }
+    
+    func getCategories() -> [Category] {
+        return categories
+    }
+    
+    func setCategoriesToFilter(from categoriesNames: [String]) {
         if categoriesNames.isEmpty {
-            drinks = allCocktails
-            selectedCategoryName = nil
+            categories = allCategories
         } else {
-            selectedCategoryName = categoriesNames
-            drinks = [categoriesNames: allCocktails[categoriesNames]!]
-            CocktailsDataSource.filterIsLoaden = true
+            categories = allCategories.filter { categoriesNames.contains($0.name ?? "") }
         }
         
+        allCocktails.removeAll()
+        delegate?.willLoadDrinks()
+        loadDrinksByCategories(categories)
     }
     
 }

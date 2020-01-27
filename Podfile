@@ -7,7 +7,11 @@ target 'cocktail-db' do
 
   # Pods for cocktail-db
 
-pod 'Alamofire'
+pod 'Moya'
 pod 'SDWebImage'
+pod 'ObjectMapper'
+pod 'Moya/RxSwift'
+pod 'Moya-ObjectMapper/RxSwift'
+pod 'RxSwift'
 
 end
