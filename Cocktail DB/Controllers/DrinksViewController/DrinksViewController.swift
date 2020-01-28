@@ -18,7 +18,6 @@ protocol DrinksDataSourceDelegate {
     func willLoadDrinks()
 }
 
-
 class DrinksViewController: UIViewController, DrinksDataSourceDelegate {
     private lazy var dataSource = DrinksDataSource(delegate: self)
     
@@ -88,7 +87,7 @@ extension DrinksViewController: UITableViewDelegate, UITableViewDataSource {
             cell.cocktailImage.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder_image"), options: .continueInBackground, completed: nil)
             }
             return cell
-        }        
+        }
         
         func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
             return DrinkCell.cellHeight()
