@@ -84,8 +84,7 @@ class DrinksDataSource {
     }
     
     func numberOfRowsInSection(section: Int) -> Int {
-        guard allCocktails.count > section else { return 0 }
-        
+        guard allCocktails.count > section else { return 0 }        
         return allCocktails[section].count
     }
     
