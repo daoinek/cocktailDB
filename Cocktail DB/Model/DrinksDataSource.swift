@@ -40,7 +40,6 @@ class DrinksDataSource {
         var categoriesForLoad = categories
         guard !categoriesForLoad.isEmpty else { return }
         guard let category = categoriesForLoad.first else { return}
-        
         networkClient.loadDrinks(categoryName: category.name ?? "").subscribe(onNext: { [weak self] (response) in
             categoriesForLoad.removeFirst()
             self?.drinksDidLoad(сategory: category, responce: response)
@@ -84,7 +83,7 @@ class DrinksDataSource {
     }
     
     func numberOfRowsInSection(section: Int) -> Int {
-        guard allCocktails.count > section else { return 0 }        
+        guard allCocktails.count > section else { return 0 }
         return allCocktails[section].count
     }
     

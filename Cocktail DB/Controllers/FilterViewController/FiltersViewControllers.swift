@@ -27,9 +27,7 @@ class FiltersViewControllers: UIViewController, UITableViewDataSource, UITableVi
     
     override func viewDidLoad() {
         super.viewDidLoad()
-                
         loadDesignAndXib()
-    
         if #available(iOS 13.0, *) {
             overrideUserInterfaceStyle = .light
         }
@@ -60,7 +58,6 @@ class FiltersViewControllers: UIViewController, UITableViewDataSource, UITableVi
     
     private func isFiltersChanged() -> Bool {
         guard let previousFilters = FiltersViewControllers.previousSelectedFilters else { return true }
-        
         return previousFilters != currentSelectedFilter
     }
     
@@ -87,9 +84,7 @@ class FiltersViewControllers: UIViewController, UITableViewDataSource, UITableVi
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
        let cell = tableView.dequeueReusableCell(withIdentifier: "categoryInFilter", for: indexPath)
-
         cell.textLabel?.text = FiltersViewControllers.allCocktailsCategory[indexPath.row]
-        
         return cell
     }
     
@@ -102,7 +97,7 @@ class FiltersViewControllers: UIViewController, UITableViewDataSource, UITableVi
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath)  {
             cell.accessoryType = .checkmark
-            currentSelectedFilter.append(FiltersViewControllers.allCocktailsCategory[indexPath.row])
+        currentSelectedFilter.append(FiltersViewControllers.allCocktailsCategory[indexPath.row])
             updateApplyButton()
         }
     }
@@ -122,6 +117,5 @@ extension FiltersViewControllers {
     self.navigationItem.hidesBackButton = true
     let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItem.Style.plain, target: self, action: #selector(FiltersViewControllers.back(sender:)))
     self.navigationItem.leftBarButtonItem = newBackButton
-
     }
 }

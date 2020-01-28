@@ -11,8 +11,7 @@ import Moya
 
 enum DrinkProvider : BaseProvider {
     case listCategories
-    case listDrinks(categoryName: String)
-    
+    case listDrinks(categoryName: String)    
 }
 
 extension DrinkProvider : TargetType {

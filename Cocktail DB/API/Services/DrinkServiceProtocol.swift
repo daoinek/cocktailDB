@@ -8,8 +8,7 @@
 
 import RxSwift
 
-protocol DrinkServiceProtocol {
-    
+protocol DrinkServiceProtocol {    
     @discardableResult func loadCategories() -> Observable<Categories>
     @discardableResult func loadDrinks(categoryName: String) -> Observable<Drinks>
 }

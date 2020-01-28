@@ -74,7 +74,6 @@ class DrinksViewController: UIViewController, DrinksDataSourceDelegate {
     private func routeToFilters() {
         let filters = dataSource.getCategoriesNames()
         guard !filters.isEmpty else { return }
-        
         let filtersViewController = FiltersViewControllers.createVC(with: filters, delegate: self)
         self.navigationController?.pushViewController(filtersViewController, animated: true)
     }
@@ -100,7 +99,6 @@ extension DrinksViewController: UITableViewDelegate, UITableViewDataSource {
 
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! DrinkCell
-
             let drink = dataSource.drinkForIndexPath(indexPath: indexPath)
             cell.cocktailName.text = drink.name
             

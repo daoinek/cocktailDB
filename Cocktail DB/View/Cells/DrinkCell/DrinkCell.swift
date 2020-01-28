@@ -19,8 +19,7 @@ class DrinkCell: UITableViewCell {
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        
+        super.setSelected(selected, animated: animated)        
         cellView.backgroundColor = UIColor(displayP3Red: 0, green: 0, blue: 0, alpha: 0)
     }
     
