@@ -37,8 +37,7 @@ extension DrinkProvider : TargetType {
         case .listDrinks(let categoryName):
             let parameters = ["c": categoryName]
             return .requestParameters(parameters: parameters, encoding: URLEncoding.default)
-        }
-        
+        }        
     }
     
     var headers: [String: String]? {

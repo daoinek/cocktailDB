@@ -33,7 +33,6 @@ class DrinksViewController: UIViewController, DrinksDataSourceDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         SVProgressHUD.show()
         loadAllCategory()
         addObserver()
@@ -47,13 +46,11 @@ class DrinksViewController: UIViewController, DrinksDataSourceDelegate {
     
     private func filterIsSelected(_ value: Bool) {
         guard let filterButtonItem = filterButton else { return }
-        
         if value {
             filterButtonItem.image = UIImage(named: "filter_on.png")
         } else {
             filterButtonItem.image = UIImage(named: "filter_off.png")
         }
-        
     }
     
     private func conectNib() {
@@ -82,7 +79,6 @@ class DrinksViewController: UIViewController, DrinksDataSourceDelegate {
     @objc func newData() {
         self.tableView.reloadData()
     }
-
 }
 
 extension DrinksViewController: UITableViewDelegate, UITableViewDataSource {
