@@ -19,5 +19,4 @@ class DrinkCategoryHeader: UITableViewHeaderFooterView {
     func setcategoryLabelText(text: String) {
         categoryLabel.text = text
     }
-
 }

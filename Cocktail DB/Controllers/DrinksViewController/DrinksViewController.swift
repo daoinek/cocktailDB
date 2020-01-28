@@ -20,9 +20,7 @@ protocol DrinksDataSourceDelegate {
 
 
 class DrinksViewController: UIViewController, DrinksDataSourceDelegate {
-    
     private lazy var dataSource = DrinksDataSource(delegate: self)
-    
     
     // MARK: - Outlets
     
@@ -35,7 +33,6 @@ class DrinksViewController: UIViewController, DrinksDataSourceDelegate {
         super.viewDidLoad()
         SVProgressHUD.show()
         loadAllCategory()
-        addObserver()
         conectNib()
         tableView.tableFooterView = UIView()
         
@@ -58,26 +55,15 @@ class DrinksViewController: UIViewController, DrinksDataSourceDelegate {
         self.tableView.register(cellNib, forCellReuseIdentifier: "customCell")
     }
     
-    private func addObserver() {
-        NotificationCenter.default.addObserver(self, selector: #selector(self.newData), name: NSNotification.Name(rawValue: "newData"), object: nil)
-    }
-
-    
     @IBAction func openSearch(_ sender: UIBarButtonItem) {
         routeToFilters()
     }
-    
     
     private func routeToFilters() {
         let filters = dataSource.getCategoriesNames()
         guard !filters.isEmpty else { return }
         let filtersViewController = FiltersViewControllers.createVC(with: filters, delegate: self)
         self.navigationController?.pushViewController(filtersViewController, animated: true)
-    }
-
-    
-    @objc func newData() {
-        self.tableView.reloadData()
     }
 }
 
@@ -92,7 +78,6 @@ extension DrinksViewController: UITableViewDelegate, UITableViewDataSource {
             return dataSource.numberOfRowsInSection(section: section)
         }
 
-
         func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
             let cell = tableView.dequeueReusableCell(withIdentifier: "customCell", for: indexPath) as! DrinkCell
             let drink = dataSource.drinkForIndexPath(indexPath: indexPath)
@@ -103,8 +88,7 @@ extension DrinksViewController: UITableViewDelegate, UITableViewDataSource {
             cell.cocktailImage.sd_setImage(with: url, placeholderImage: UIImage(named: "placeholder_image"), options: .continueInBackground, completed: nil)
             }
             return cell
-        }
-        
+        }        
         
         func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
             return DrinkCell.cellHeight()

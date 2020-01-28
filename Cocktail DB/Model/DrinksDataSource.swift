@@ -47,7 +47,6 @@ class DrinksDataSource {
         }).disposed(by: disposeBag)
     }
     
-    
     //MARK: -  Did load dataFromNetwork methods
     
     private func drinksDidLoad(сategory: Category, responce: Drinks) {
