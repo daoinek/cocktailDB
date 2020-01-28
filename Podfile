@@ -13,5 +13,7 @@ pod 'ObjectMapper'
 pod 'Moya/RxSwift'
 pod 'Moya-ObjectMapper/RxSwift'
 pod 'RxSwift'
+pod 'SVProgressHUD'
+
 
 end

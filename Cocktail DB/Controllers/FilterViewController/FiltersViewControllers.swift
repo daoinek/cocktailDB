@@ -9,10 +9,10 @@
 import UIKit
 
 public protocol FiltersViewControllerDelegate {
-    func filtersDidChange(category: String)
+    func filtersDidChange(category: [String])
 }
 
-class FilterViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class FiltersViewControllers: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     // MARK: - Outlets & Properties
     
@@ -22,8 +22,8 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     private var delegate: FiltersViewControllerDelegate?
     
     private static var allCocktailsCategory = [String]()
-    private static var previousSelectedFilters: String?
-    private var currentSelectedFilter = String()
+    private static var previousSelectedFilters: [String]?
+    private var currentSelectedFilter = [String]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,11 +37,11 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     
     // MARK: - Init
         
-    static func createVC(with category: [String], delegate: FiltersViewControllerDelegate) -> FilterViewController {
-        let vc = UIStoryboard(name: "FilterViewController", bundle: nil).instantiateViewController(withIdentifier: "FilterViewController") as! FilterViewController
+    static func createVC(with category: [String], delegate: FiltersViewControllerDelegate) -> FiltersViewControllers {
+        let vc = UIStoryboard(name: "FilterViewController", bundle: nil).instantiateViewController(withIdentifier: "FilterViewController") as! FiltersViewControllers
         
-        if FilterViewController.allCocktailsCategory.isEmpty {
-            FilterViewController.allCocktailsCategory = category
+        if FiltersViewControllers.allCocktailsCategory.isEmpty {
+            FiltersViewControllers.allCocktailsCategory = category
         }
         
         vc.delegate = delegate        
@@ -59,7 +59,7 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     }
     
     private func isFiltersChanged() -> Bool {
-        guard let previousFilters = FilterViewController.previousSelectedFilters else { return true }
+        guard let previousFilters = FiltersViewControllers.previousSelectedFilters else { return true }
         
         return previousFilters != currentSelectedFilter
     }
@@ -81,14 +81,14 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return FilterViewController.allCocktailsCategory.count
+        return FiltersViewControllers.allCocktailsCategory.count
     }
 
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
        let cell = tableView.dequeueReusableCell(withIdentifier: "categoryInFilter", for: indexPath)
 
-        cell.textLabel?.text = FilterViewController.allCocktailsCategory[indexPath.row]
+        cell.textLabel?.text = FiltersViewControllers.allCocktailsCategory[indexPath.row]
         
         return cell
     }
@@ -102,13 +102,13 @@ class FilterViewController: UIViewController, UITableViewDataSource, UITableView
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let cell = tableView.cellForRow(at: indexPath)  {
             cell.accessoryType = .checkmark
-            currentSelectedFilter.append(FilterViewController.allCocktailsCategory[indexPath.row])
+            currentSelectedFilter.append(FiltersViewControllers.allCocktailsCategory[indexPath.row])
             updateApplyButton()
         }
     }
 }
 
-extension FilterViewController {
+extension FiltersViewControllers {
     
     func loadDesignAndXib() {
     tableView.tableFooterView = UIView()
@@ -117,10 +117,10 @@ extension FilterViewController {
     applyFiltersButton.layer.cornerRadius = 15
     applyFiltersButton.layer.masksToBounds = true
         
-    tableView.register(CustomFilterCell.nib, forCellReuseIdentifier: CustomFilterCell.identifier)
+    tableView.register(FilterCell.nib, forCellReuseIdentifier: FilterCell.identifier)
         
     self.navigationItem.hidesBackButton = true
-    let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItem.Style.plain, target: self, action: #selector(FilterViewController.back(sender:)))
+    let newBackButton = UIBarButtonItem(title: "Back", style: UIBarButtonItem.Style.plain, target: self, action: #selector(FiltersViewControllers.back(sender:)))
     self.navigationItem.leftBarButtonItem = newBackButton
 
     }

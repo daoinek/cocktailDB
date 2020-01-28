@@ -19,6 +19,7 @@ PODS:
   - SDWebImage (5.5.2):
     - SDWebImage/Core (= 5.5.2)
   - SDWebImage/Core (5.5.2)
+  - SVProgressHUD (2.2.5)
 
 DEPENDENCIES:
   - Moya
@@ -27,6 +28,7 @@ DEPENDENCIES:
   - ObjectMapper
   - RxSwift
   - SDWebImage
+  - SVProgressHUD
 
 SPEC REPOS:
   trunk:
@@ -36,6 +38,7 @@ SPEC REPOS:
     - ObjectMapper
     - RxSwift
     - SDWebImage
+    - SVProgressHUD
 
 SPEC CHECKSUMS:
   Alamofire: ca8c0de6906873be89d6deec5c8de279e00bf872
@@ -44,7 +47,8 @@ SPEC CHECKSUMS:
   ObjectMapper: 70187b8941977c62ccfb423caf6b50be405cabf0
   RxSwift: e2dc62b366a3adf6a0be44ba9f405efd4c94e0c4
   SDWebImage: 4d5c027c935438f341ed33dbac53ff9f479922ca
+  SVProgressHUD: 1428aafac632c1f86f62aa4243ec12008d7a51d6
 
-PODFILE CHECKSUM: b920596fbdd6b021221d88c16e184662c7196186
+PODFILE CHECKSUM: 4ef41e472437bae5337e23490b60a170719b9b91
 
 COCOAPODS: 1.8.4

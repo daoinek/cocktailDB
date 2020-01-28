@@ -1,5 +1,5 @@
 //
-//  CustomHeaderSectionView.swift
+//  DrinkCategoryHeader.swift
 //  cocktail-db
 //
 //  Created by Kostya Bershov on 22.01.2020.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CustomHeaderSectionView: UITableViewHeaderFooterView {
+class DrinkCategoryHeader: UITableViewHeaderFooterView {
 
     @IBOutlet weak var categoryLabel: UILabel!
     

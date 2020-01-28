@@ -8,19 +8,12 @@
 
 import UIKit
 
-class CustomDrinkCell: UITableViewCell {
+class DrinkCell: UITableViewCell {
 
     @IBOutlet weak var cellView: UIView!
     @IBOutlet weak var cocktailImage: UIImageView!
     @IBOutlet weak var cocktailName: UILabel!
-    
-    
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-    
+
     static func cellHeight() -> CGFloat {
         return 100
     }
@@ -29,8 +22,6 @@ class CustomDrinkCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
         
         cellView.backgroundColor = UIColor(displayP3Red: 0, green: 0, blue: 0, alpha: 0)
-
-        // Configure the view for the selected state
     }
     
     

@@ -9,9 +9,9 @@
 import Moya
 
 
-protocol NetworkProvider {}
+protocol BaseProvider {}
 
-extension NetworkProvider {
+extension BaseProvider {
     
     // MARK: - Properties
     

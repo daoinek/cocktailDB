@@ -11,7 +11,7 @@
         <!--Filter-->
         <scene sceneID="kj1-7S-oFG">
             <objects>
-                <viewController storyboardIdentifier="FilterViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="6YQ-Wv-KUW" customClass="FilterViewController" customModule="Cocktail_DB" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="FilterViewController" modalPresentationStyle="fullScreen" useStoryboardIdentifierAsRestorationIdentifier="YES" id="6YQ-Wv-KUW" customClass="FiltersViewControllers" customModule="Cocktail_DB" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gyX-oz-v3Q">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

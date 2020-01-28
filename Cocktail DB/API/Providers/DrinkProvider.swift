@@ -9,7 +9,7 @@
 import Moya
 
 
-enum DrinkProvider : NetworkProvider {
+enum DrinkProvider : BaseProvider {
     case listCategories
     case listDrinks(categoryName: String)
     

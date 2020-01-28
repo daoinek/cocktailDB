@@ -53,8 +53,7 @@ class DrinksDataSource {
     
     private func drinksDidLoad(сategory: Category, responce: Drinks) {
         guard let section = categories.firstIndex(of: сategory),
-            let drinksForSection = responce.list else { return }
-        
+        let drinksForSection = responce.list else { return }
         allCocktails.append(drinksForSection)
         delegate?.didLoadDrinksForSection(section: section)
     }
@@ -62,7 +61,6 @@ class DrinksDataSource {
     private func categoriesDidLoad(response: Categories) {
         categories.removeAll()
         guard let categoriesFromServes = response.list else { return }
-        
         allCategories = categoriesFromServes
         categories = categoriesFromServes
         delegate?.didLoadCategories()
@@ -70,8 +68,7 @@ class DrinksDataSource {
     
     private func drinksDidLoadForCategory(сategory: Category, responce: Drinks) {
         guard let section = categories.firstIndex(of: сategory),
-            let drinksForSection = responce.list else { return }
-        
+        let drinksForSection = responce.list else { return }        
         allCocktails.append(drinksForSection)
         delegate?.didLoadDrinksForSection(section: section)
     }
